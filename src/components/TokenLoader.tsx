@@ -16,7 +16,6 @@ export const TokenLoder = () => {
   const email = useAuthStore((s) => s.email);
 
   useEffect(() => {
-    
     const refreshToken = async () => {
       try {
         // HTTP standardına göre GET isteklerinde body gönderilmez.
@@ -34,7 +33,14 @@ export const TokenLoder = () => {
           setLoading(false); // ❌ Token yoksa bile loading kapanmalı
           return;
         } */
-        if (!res.ok) return;
+        if (!res.ok) {
+          if (res.status === 401) {
+            // Kullanıcı oturum süresi bitmiş
+            console.log("Oturum süresi dolmuş. Login'e yönlendiriliyor.");
+            window.location.href = "/login"; // ✅ SSR dostu yönlendirme
+          }
+          return;
+        }
 
         // Eğer sunucu hata dönerse devam etme (401 vs.)
 
@@ -55,12 +61,8 @@ export const TokenLoder = () => {
     };
 
     refreshToken();
-  }, [ email, setAccessToken, setEmail, setLoading]);
+  }, []);
 
-  return (
-    <>
-      {isLoading && <LoadingScreen />}
-    </>
-  )
+  return <>{isLoading && <LoadingScreen />}</>;
   // Bu component görünür bir şey döndürmez ama arka planda token yükleme işi yapar
 };

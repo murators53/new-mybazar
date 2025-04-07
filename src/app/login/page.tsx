@@ -33,7 +33,6 @@ const LoginPage = () => {
           "Content-type": "application/json", // JSON formatında veri gönderiyoruz
         },
       });
-      
 
       if (!res.ok) {
         const errorData = await res.json();
@@ -51,13 +50,14 @@ const LoginPage = () => {
         const { jwtApiRouteTestControl, accessToken, email } = await res.json(); // JWT token'ı backend'den alıyoruz
         setAccessToken(accessToken); // Zustand store’a yaz
         setEmail(email);
+
         toast.success("Giriş başarılı, yönlendiriliyorsunuz...", {
-          duration: 1500, // kullanıcı mesajı rahatça okusun
+          duration: 1500,
         });
         
         setTimeout(() => {
           router.push("/");
-        }, 3000); // aynı süre
+        }, 1600); // 100ms gecikmeli ki mesaj kaybolunca yönlensin
       }
     } catch (err) {
       toast.error("Sunucu hatası!");

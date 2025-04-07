@@ -30,25 +30,29 @@ const Navbar = () => {
   const accessToken = useAuthStore((s) => s.accessToken);
   const setEmail = useAuthStore((s) => s.setEmail);
 
-  /* useEffect(() => {
+  useEffect(() => {
+    if (!accessToken || email) return;
+  
     const fetchProfile = async () => {
-      if (!accessToken || email) return; // ❗ accessToken yoksa VEYA email zaten varsa → fetch etme
       try {
         const res = await fetch("/api/auth/profile", {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-
         const data = await res.json();
-        
+        if (data.email) {
+          setEmail(data.email);
+        }
       } catch (err) {
         console.error("Profil alınamadı", err);
       }
     };
-
-    // if (!email) fetchProfile(); // ❗ sadece email yoksa fetch et
-  }, [accessToken]); */
+  
+    fetchProfile();
+  }, [accessToken]);
+  
+  
   //Kullanıcı şu anda /login sayfasında mı? Ya da /register sayfasında mı?
   //Eğer login veya register sayfasındaysan → true olur.
   // login ve register sayfalarında minimalist navbar göster
