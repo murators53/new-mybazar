@@ -11,7 +11,7 @@ export const TokenLoder = () => {
   const setLoading = useAuthStore((s) => s.setLoading);
   const setEmail = useAuthStore((s) => s.setEmail);
   const email = useAuthStore((s) => s.email);
-
+  const setHydrated = useAuthStore((s) => s.setHydrated); // ✅ eklendi
   useEffect(() => {
     console.log("tokenloader calisti");
     const refreshToken = async () => {
@@ -35,9 +35,8 @@ export const TokenLoder = () => {
           console.log("🟡 Token alınamadı. Giriş yapılmamış olabilir."); // }
           return;
         }
-
         // Eğer sunucu hata dönerse devam etme (401 vs.)
-
+        
         const data = await res.json(); // body'i json'a cevirir
         // Yeni accessToken JSON formatında geliyor
         setAccessToken(data.accessToken);
@@ -52,6 +51,8 @@ export const TokenLoder = () => {
         // Hata olursa konsola logla (örneğin cookie yoksa veya expire olduysa)
       } finally {
         setLoading(false);
+        setHydrated(); // ✅ burada hydrate işlemi tamamlandı diyoruz
+        //SSR'dan gelen bileşenlerin yanlış erken render edilmesini engeller.
       }
     };
 

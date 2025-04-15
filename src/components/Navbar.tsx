@@ -2,10 +2,9 @@
 
 import { Moon, ShoppingCart, Sun, User } from "lucide-react";
 import Link from "next/link";
-import LogoutButton from "./ui/UserMenu";
+import LogoutButton from "./ui/LogoutButton";
 import { useCartStore } from "@/store/cartStore";
 import SearchInput from "./SearchInput";
-import { usePathname } from "next/navigation";
 import { useThemeStore } from "@/store/themeStore";
 import { useAuthStore } from "@/store/authStore";
 import { useEffect } from "react";
@@ -17,22 +16,24 @@ import {
 } from "@/components/ui/dropdown-menu";
 import RainbowDivider from "./RainbovDivider";
 import MegaMenu from "./MegaMenu";
+import Skeleton from "./ui/Skeleton";
 
 const Navbar = () => {
-  const pathname = usePathname();
   const totalItems = useCartStore((s) =>
     s.cart.reduce((total, item) => total + item.quantity, 0)
   );
   const theme = useThemeStore((s) => s.theme); // ✅ Tema bilgisi
   const toggleTheme = useThemeStore((s) => s.toggleTheme);
   const email = useAuthStore((s) => s.email);
-  const logout = useAuthStore((s) => s.logout);
   const accessToken = useAuthStore((s) => s.accessToken);
   const setEmail = useAuthStore((s) => s.setEmail);
-
+  const isLoading = useAuthStore((s) => s.isLoading);
+  const isHydrated = useAuthStore((s) => s.isHydrated); // ✅ eklendi
+  const isProfileLoading = isLoading || (!email && !!accessToken);
+  const isLoggingOut = useAuthStore((s) => s.isLoggingOut);
   useEffect(() => {
     if (!accessToken || email) return;
-  
+
     const fetchProfile = async () => {
       try {
         const res = await fetch("/api/auth/profile", {
@@ -48,16 +49,9 @@ const Navbar = () => {
         console.error("Profil alınamadı", err);
       }
     };
-  
+
     fetchProfile();
   }, [accessToken]);
-  
-  
-  //Kullanıcı şu anda /login sayfasında mı? Ya da /register sayfasında mı?
-  //Eğer login veya register sayfasındaysan → true olur.
-  // login ve register sayfalarında minimalist navbar göster
-  const isAuthPage = pathname === "/login" || pathname === "/register";
-  console.log("email", email);
 
   return (
     <header className="w-full shadow-sm sticky top-0 bg-white dark:bg-zinc-900 text-black dark:text-white z-50 border-b dark:border-zinc-700 transition-colors duration-300">
@@ -66,11 +60,16 @@ const Navbar = () => {
         <Link href={"/"} className="text-xl font-bold">
           my<span className="text-blue-800 dark:text-blue-400">Bāzar</span>
         </Link>
-
-        {email ? (
+        <SearchInput />
+        {isLoading || !isHydrated || isProfileLoading || isLoggingOut ? (
+          <div className="flex items-center gap-2 py-[0.5px] justify-end">
+            <Skeleton className="h-9 w-[32.5px] rounded-3xl" />{" "}
+            {/* 👤 avatar */}
+            <Skeleton className="h-9 w-[32.5px] rounded-3xl" /> {/* 🛒 sepet */}
+            <Skeleton className="h-9 w-[32.5px] rounded-3xl" /> {/* 🌙 tema */}
+          </div>
+        ) : email ? (
           <div className="flex items-center gap-3">
-            <SearchInput />
-            <Link href="/profile">
               <DropdownMenu>
                 <DropdownMenuTrigger className="focus:outline-none">
                   <User
@@ -99,7 +98,6 @@ const Navbar = () => {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-            </Link>
             <Link href="/cart" className="relative">
               <ShoppingCart
                 className="w-7 h-7 p-1 rounded-md transition-colors duration-200 
@@ -131,17 +129,30 @@ const Navbar = () => {
             </button>
           </div>
         ) : (
-          <Link
-            href="/login"
-            className="px-5 py-2 rounded-xl text-white bg-gradient-to-r from-blue-700 to-blue-500 hover:from-blue-700 hover:to-blue-600 shadow-md transition-all text-sm font-medium tracking-wide"
-          >
-            Oturum Aç
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/login"
+              className="px-[6.2px] py-[6px] rounded-xl text-white bg-gradient-to-r from-blue-700 to-blue-500 hover:from-blue-700 hover:to-blue-600 shadow-md transition-all text-sm font-medium tracking-wide"
+            >
+              Giriş Yap
+            </Link>
+
+            <button
+              onClick={toggleTheme}
+              className="p-1 rounded hover:bg-gray-200 dark:hover:bg-zinc-700"
+              aria-label="Tema değiştir"
+            >
+              {theme === "dark" ? (
+                <Sun className="w-6 h-6 text-yellow-300" />
+              ) : (
+                <Moon className="w-6 h-6" />
+              )}
+            </button>
+          </div>
         )}
       </div>
       <RainbowDivider />
       <MegaMenu />
-      {/* {pathname === "/" && <MegaMenu />} */}
     </header>
   );
 };

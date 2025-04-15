@@ -5,17 +5,23 @@ type AuthState = {
     accessToken: string | null; //Kullanici accessToken'i (giris yapinca set edilir)
     isLoading: boolean;
     email: string | null;
+    isHydrated: boolean;
+    setHydrated: () => void;
     setAccessToken: (token: string) => void; // accessToken'ı belleğe kaydetmek için fonksiyon}
     clearAccessToken: () => void; // accessToken'ı silmek için fonksiyon (örn. logout)
     setLoading: (loading: boolean) => void;
     setEmail: (email: string) => void;
     logout: () => void;
+    isLoggingOut: boolean; // 👈 yeni state
+    setLoggingOut: (loggingOut: boolean) => void; // 👈 yeni setter
 }
 // 🧠 Zustand ile global bir auth store (durum yönetimi) oluşturuluyor
 export const useAuthStore = create<AuthState>((set) => ({
     accessToken: null,// İlk başta token yok (kullanıcı giriş yapmamış)
     isLoading: true,
     email: null,
+    isHydrated: false,
+    setHydrated: () => set({ isHydrated: true }),
     // ✅ Kullanıcı giriş yaptığında token'ı state'e yazar
     setAccessToken: (token) => set({ accessToken: token }),
     // 🔓 Kullanıcı çıkış yaptığında token'ı sıfırlar
@@ -26,7 +32,9 @@ export const useAuthStore = create<AuthState>((set) => ({
         accessToken: null,
         email: null,
         isLoading: false,
-    })
+    }),
+    setLoggingOut: (loggingOut) => set({ isLoggingOut: loggingOut }),
+    isLoggingOut: false,
 }))
 
 

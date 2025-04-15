@@ -1,9 +1,7 @@
 
 import ProductCard from "@/components/ProductCard";
 import LayoutWrapper from "@/components/shared/LayoutWrapper";
-// 🔄 React Query'nin temel hook’u. Veri çekme, caching, loading/error durumlarını yönetme gibi işleri otomatik yapar.
 
-// Ürün verisinin TypeScript tipi tanımı API’den gelen ürünlerin hangi formatta
 type Product = {
   id: number;
   title: string;
@@ -11,15 +9,7 @@ type Product = {
   thumbnail: string;
 };
 
-// API'den veri çeken server-side fonksiyon
 async function getProducts() {
-  if (process.env.NODE_ENV === "development") {
-    // await new Promise((r) => setTimeout(r, 11333));
-    // if (true) throw new Error("Test hatası!");
-  }
-  // Böylece sadece lokalde test eder, production'da anında yüklenir.
-  
-
   const res = await fetch("https://dummyjson.com/products", {
     next: { revalidate: 60 },
   });
