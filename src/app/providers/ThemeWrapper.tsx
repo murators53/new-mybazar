@@ -22,16 +22,17 @@ export default function ThemeWrapper({ children }: { children: React.ReactNode }
   }, [transitionAt]);
 
   return (
-    <html lang="en" className={theme === "dark" ? "dark" : ""}>
-      <body
-        className={`${
-          theme === "dark"
-            ? "dark:bg-zinc-900 dark:text-white"
-            : "bg-white text-black"
-        } ${ready ? "transition-colors duration-500" : ""}`}
+    <html lang="en" className={theme === "dark" ? "dark": ""}>
+
+     <body
+      className={`min-h-screen ${
+        theme === "dark"
+        ? "dark:bg-zinc-900 dark:text-white"
+        : "bg-white text-black"
+      } ${ready ? "transition-colors duration-500" : ""}`}
       >
-        {children}
-      </body>
-    </html>
+      {children}
+    </body>
+      </html>
   );
 }

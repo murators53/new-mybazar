@@ -8,8 +8,7 @@ type Product = {
   thumbnail: string;
 };
 
-export default async function ({ params }: { params: { slug: string } }) {
-  ("params", params);
+export default async function CategoryPage({ params }: { params: { slug: string } }) {
 
   const res = await fetch(
     `http://dummyjson.com/products/category/${params.slug}`

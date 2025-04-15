@@ -25,12 +25,12 @@ const SearchInput = () => {
       {/* Masaüstü versiyon - hep açık */}
       <form
         onSubmit={handleSearch}
-        className="hidden md:flex items-center bg-gray-100 dark:bg-zinc-800 rounded-full px-3 py-1 border border-gray-200 dark:border-zinc-600"
+        className="hidden md:flex  items-center bg-gray-100 dark:bg-zinc-800 rounded-full px-3 py-1 border border-gray-200 dark:border-zinc-600"
       >
         <input
           type="text"
           placeholder="Ara..."
-          className="bg-transparent text-sm focus:outline-none px-2 py-1 text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400 w-[200px] lg:w-[240px]"
+          className="bg-transparent  text-sm focus:outline-none px-2 py-1 text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400 w-[200px] lg:w-[240px]"
           value={term}
           onChange={(e) => setTerm(e.target.value)}
         />

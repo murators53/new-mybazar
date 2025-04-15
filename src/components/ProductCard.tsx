@@ -5,7 +5,6 @@ import { useCartStore } from "@/store/cartStore";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
 
 interface ProductProps {
   id: string;
@@ -25,14 +24,14 @@ const ProductCard = ({ id, title, price, image }: ProductProps) => {
       }`}
     >
       <Link href={`/product/${id}`}>
-      {image && (
-        <img
-          src={image}
-          alt={title}
-          className="w-full rounded  h-40 object-contain"
-        />
-      )}
-        <h3 className="font-medium mt-3">{title}</h3>
+        {image && (
+          <img
+            src={image}
+            alt={title}
+            className="w-full rounded-full  h-40 object-contain"
+          />
+        )}
+        <h3 className="line-clamp-2 min-h-[48px] text-base font-medium mt-3">{title}</h3>
         <p className="text-primary font-bold">{price}₺</p>
       </Link>
       <Button

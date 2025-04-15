@@ -1,6 +1,7 @@
 "use client";
 
 import ProductCard from "@/components/ProductCard";
+import SearchResultSkeleton from "@/components/ui/skeletons/SearchResultSkeleton";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
@@ -11,7 +12,7 @@ type Product = {
   thumbnail: string;
 };
 
-// 🔧 Sen sadece query değerini alıp API’ye iletiyorsun, 
+// 🔧 Sen sadece query değerini alıp API’ye iletiyorsun,
 // yani “ben şunu arıyorum” diyorsun.
 // 🎯Asıl arama işini yapan taraf → API'nin kendisi (backend).
 
@@ -23,11 +24,18 @@ export default function SearchPage() {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["search", query], //queryKey	Aynı sorguyu tekrar yapmamak için cache anahtarı
-    queryFn: async () => {//API çağrısı yapan async fonksiyon
+    queryFn: async () => {
+      //API çağrısı yapan async fonksiyon
       const res = await fetch(
         `https://dummyjson.com/products/search?q=${query}`
       );
       const json = await res.json();
+
+      if (process.env.NODE_ENV === "development") {
+        // await new Promise((r) => setTimeout(r, 11333));
+        // if (true) throw new Error("Test hatası!");
+      }
+
       return json.products as Product[];
     },
     enabled: !!query, // ✅ Sadece query varsa çalışır
@@ -36,10 +44,15 @@ export default function SearchPage() {
 
   // Kullanıcı ?q= göndermemişse → direkt mesaj gösterilir
   if (!query) return <div className="p-8 text-center">Arama terimi yok</div>;
-  if (isLoading) return <div className="p-8 text-center">Yükleniyor...</div>;
-  if (error) return <div className="p-8 text-center">Bir hata oluştu</div>;
+  if (isLoading) return <SearchResultSkeleton title={`"${query}"`} />;
+  if (error)
+    return (
+      <div className="p-8 text-center text-red-600 dark:text-red-400">
+        Arama sırasında bir hata oluştu. Lütfen tekrar deneyin.
+      </div>
+    );
   if (data?.length === 0)
-    return <div className="p-8 text-center">Sonuç bulunamadı</div>;
+    return <div className="p-8 text-center">Sonuç bulunamadı.</div>;
 
   return (
     <div className="p-6">

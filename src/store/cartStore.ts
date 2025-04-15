@@ -21,7 +21,7 @@ type CartItem = {
     quantity: number; //Urunden kac adet var
 };
 
-type CartState = {
+export type CartState = {
     cart: CartItem[]; //Sepet dizisi
     //Omit<T, K>	T tipinden K alanını çıkar
     // {id: string;name: string;price: number;// quantity yok!}

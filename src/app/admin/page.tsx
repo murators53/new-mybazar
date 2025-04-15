@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
-import LoadingScreen from "@/components/LoadingScreen";
 
 const AdminPage = () => {
   const router = useRouter();
@@ -33,10 +32,6 @@ const AdminPage = () => {
 
     checkAdmin();
   }, [accessToken, isLoading]);
-
-  if (isLoading) {
-    return <LoadingScreen/>
-  }
 
   return (
     <div className="p-8">

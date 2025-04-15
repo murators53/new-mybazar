@@ -66,7 +66,7 @@ export async function POST(req: Request) {
         },
         process.env.JWT_SECRET!,
         {
-            expiresIn: '7d'
+            expiresIn: '15d'
         }
     )
 

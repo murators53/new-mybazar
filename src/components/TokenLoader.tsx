@@ -2,7 +2,6 @@
 
 import { useAuthStore } from "@/store/authStore";
 import { useEffect } from "react";
-import LoadingScreen from "./LoadingScreen";
 
 // Bu bir client component çünkü useEffect ve Zustand kullanıyor
 
@@ -10,12 +9,11 @@ export const TokenLoder = () => {
   const setAccessToken = useAuthStore((state) => state.setAccessToken);
   //Global state'e accessToken'i kaydetmek icin Zustand fonskyonu aliyoruz
   const setLoading = useAuthStore((s) => s.setLoading);
-  const accessToken = useAuthStore((s) => s.accessToken);
-  const isLoading = useAuthStore((s) => s.isLoading);
   const setEmail = useAuthStore((s) => s.setEmail);
   const email = useAuthStore((s) => s.email);
 
   useEffect(() => {
+    console.log("tokenloader calisti");
     const refreshToken = async () => {
       try {
         // HTTP standardına göre GET isteklerinde body gönderilmez.
@@ -34,11 +32,7 @@ export const TokenLoder = () => {
           return;
         } */
         if (!res.ok) {
-          if (res.status === 401) {
-            // Kullanıcı oturum süresi bitmiş
-            console.log("Oturum süresi dolmuş. Login'e yönlendiriliyor.");
-            window.location.href = "/login"; // ✅ SSR dostu yönlendirme
-          }
+          console.log("🟡 Token alınamadı. Giriş yapılmamış olabilir."); // }
           return;
         }
 
@@ -51,6 +45,7 @@ export const TokenLoder = () => {
         if (data.email && data.email !== email) {
           setEmail(data.email);
         }
+        console.log("✅ Token yenilendi:", data.accessToken);
         // Yeni token'ı global state'e yaz → artık tüm app bu token'ı kullanabilir
       } catch (error) {
         console.log("Refresh token failed", error);
@@ -63,6 +58,6 @@ export const TokenLoder = () => {
     refreshToken();
   }, []);
 
-  return <>{isLoading && <LoadingScreen />}</>;
+  return null;
   // Bu component görünür bir şey döndürmez ama arka planda token yükleme işi yapar
 };

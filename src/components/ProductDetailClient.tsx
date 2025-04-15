@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { useCartStore } from "@/store/cartStore";
-import { usePathname } from "next/navigation";
 
 type Product = {
   id: number;
@@ -16,7 +15,7 @@ type Product = {
 
 export default function ProductDetailClient({ product }: { product: Product }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  
+
   const handlePrev = () => {
     setCurrentImageIndex((prev) =>
       prev === 0 ? product.images.length - 1 : prev - 1
