@@ -1,7 +1,6 @@
 "use client";
 
 import Navbar from "@/components/Navbar";
-import Skeleton from "@/components/ui/Skeleton";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -23,10 +22,24 @@ export default function UserLayout({
 
   if (!accessToken) return null;
 
+  /* if (isLoading) {
+    return (
+      <>
+        <Navbar />
+        <div className="flex items-center justify-center h-[70vh]">
+          <div className="animate-pulse space-y-4 text-center">
+            <Skeleton className="h-4 w-48 mx-auto" />
+            <Skeleton className="h-4 w-32 mx-auto" />
+          </div>
+        </div>
+      </>
+    );
+  } */
+
   return (
     <>
       <Navbar />
-      {isLoading ? (
+      {/* {isLoading ? (
         <div className="flex items-center justify-center h-[70vh]">
           <div className="animate-pulse space-y-4 text-center">
             <Skeleton className="h-4 w-48 mx-auto" />
@@ -35,7 +48,8 @@ export default function UserLayout({
         </div>
       ) : (
         children
-      )}
+      )} */}
+      {children}
     </>
   );
 }

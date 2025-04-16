@@ -70,7 +70,7 @@ const LoginPage = () => {
   return (
     <form
       onSubmit={handleLogin}
-      className="max-w-md mx-auto mt-20 p-6 rounded-2xl shadow-xl bg-white dark:bg-zinc-900 space-y-5 border border-gray-100 dark:border-zinc-700"
+      className="max-w-md mx-auto mt-32 p-6 rounded-2xl shadow-xl bg-white dark:bg-zinc-900 space-y-5 border border-gray-100 dark:border-zinc-700"
     >
       <h2 className="text-2xl font-bold text-center flex items-center justify-center gap-2">
         <span role="img" aria-label="lock">
