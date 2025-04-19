@@ -7,7 +7,7 @@ import { useCartStore } from "@/store/cartStore";
 import SearchInput from "./SearchInput";
 import { useThemeStore } from "@/store/themeStore";
 import { useAuthStore } from "@/store/authStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,9 +31,15 @@ const Navbar = () => {
   const isHydrated = useAuthStore((s) => s.isHydrated); // ✅ eklendi
   const isProfileLoading = isLoading || (!email && !!accessToken);
   const isLoggingOut = useAuthStore((s) => s.isLoggingOut);
+  const [showSkeletonDelay, setShowSkeletonDelay] = useState(true);
+  const showSkeleton =
+    isLoading ||
+    !isHydrated ||
+    isProfileLoading ||
+    isLoggingOut ||
+    showSkeletonDelay;
   useEffect(() => {
-    if (!accessToken || email) return;
-
+    if (!isHydrated || !accessToken || email) return;
     const fetchProfile = async () => {
       try {
         const res = await fetch("/api/auth/profile", {
@@ -52,6 +58,10 @@ const Navbar = () => {
 
     fetchProfile();
   }, [accessToken]);
+  useEffect(() => {
+    const timer = setTimeout(() => setShowSkeletonDelay(false), 100); // 0.5 saniye skeleton garanti
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <header className="w-full shadow-sm sticky top-0 bg-white dark:bg-zinc-900 text-black dark:text-white z-50 border-b dark:border-zinc-700 transition-colors duration-300">
@@ -61,7 +71,7 @@ const Navbar = () => {
           my<span className="text-blue-800 dark:text-blue-400">Bāzar</span>
         </Link>
         <SearchInput />
-        {isLoading || !isHydrated || isProfileLoading || isLoggingOut ? (
+        {showSkeleton ? (
           <div className="flex items-center gap-2 py-[0.5px] justify-end">
             <Skeleton className="h-9 w-[32.5px] rounded-3xl" />{" "}
             {/* 👤 avatar */}
@@ -70,34 +80,34 @@ const Navbar = () => {
           </div>
         ) : email ? (
           <div className="flex items-center gap-3">
-              <DropdownMenu>
-                <DropdownMenuTrigger className="focus:outline-none">
-                  <User
-                    className="translate-y-[3px] w-7 h-7 p-1 rounded-md transition-colors duration-200 
+            <DropdownMenu>
+              <DropdownMenuTrigger className="focus:outline-none">
+                <User
+                  className="translate-y-[3px] w-7 h-7 p-1 mb-[5px] rounded-md transition-colors duration-200 
              hover:bg-gray-200 dark:hover:bg-zinc-700 cursor-pointer"
-                  />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-white dark:bg-zinc-900">
-                  <DropdownMenuItem asChild>
-                    <Link href="/profile" className="dropdown-link">
-                      👤 Profil
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/profile/orders" className="dropdown-link">
-                      📦 Siparişlerim
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild className="pointer-event">
-                    <Link href="/profile/carts" className="dropdown-link">
-                      🛒 Sepet Geçmişi
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    🚪 <LogoutButton />{" "}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-white dark:bg-zinc-900">
+                <DropdownMenuItem asChild>
+                  <Link href="/profile" className="dropdown-link">
+                    👤 Profil
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/profile/orders" className="dropdown-link">
+                    📦 Siparişlerim
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="pointer-event">
+                  <Link href="/profile/carts" className="dropdown-link">
+                    🛒 Sepet Geçmişi
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  🚪 <LogoutButton />{" "}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Link href="/cart" className="relative">
               <ShoppingCart
                 className="w-7 h-7 p-1 rounded-md transition-colors duration-200 

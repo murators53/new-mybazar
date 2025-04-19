@@ -1,5 +1,6 @@
 "use client";
 
+import ErrorMessage from "@/components/ui/ErrorMessage";
 import ProfileSkeleton from "@/components/ui/skeletons/ProfileSkeleton";
 import { useAuthStore } from "@/store/authStore";
 import { User } from "lucide-react";
@@ -19,30 +20,15 @@ const ProfilePage = () => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [hasError, setHasError] = useState(false);
 
-  /*  
-  🧠 Özet Akış:
-    🟢 Login ol → accessToken (RAM) + refreshToken (cookie)
-    🔄 Sayfa yenilenince:
-    🔸 RAM sıfırlanır → accessToken gider ❌
-    🔸 Ama cookie kalır → refreshToken hâlâ tarayıcıda ✅
-    ➡️ useEffect → /api/auth/refresh → yeni accessToken al ✅
-    ➡️ useAuthStore().setAccessToken(...) ile yeniden yaz RAM'e ✅
-  */
-
   useEffect(() => {
     if (!accessToken) return;
-    // Component ilk yüklendiğinde veya accessToken değiştiğinde çalışacak
     const fetchProfile = async () => {
-      // 🛑 Token yüklenmeden çağrı yapma!
       if (isLoading) return;
       if (!accessToken) {
         router.push("/login");
         return;
       }
-      //Eger accessToken yoksa fetch işlemini yapma -> çünkü yetkisiz erişim olur
 
-      // Backend'e istek atıyoruz ve JWT'yi Authorization başlığına ekliyoruz
-      // Böylece sunucu kullanıcının yetkili olduğunu anlayabilir
       try {
         const res = await fetch("/api/auth/profile", {
           headers: {
@@ -52,39 +38,38 @@ const ProfilePage = () => {
         });
 
         if (!res.ok) {
-          router.push("/login");
-          return;
+          throw new Error("Profil alınamadı"); // ❌ error gösterilecek
         }
 
-        if (process.env.NODE_ENV === 'development') {
+        if (process.env.NODE_ENV === "development") {
+          await new Promise((resolve) => setTimeout(resolve, 444));
         }
 
         const data = await res.json();
-        // Gelen JSON verisini JavaScript objesine çeviriyoruz yani body kismini
-        //   console.log("data", data);
-        //  {id: 1, email: 'asd@asd', iat: 1743507551, exp: 1743508451}
 
-        setProfile(data); // Profile state'ini güncelliyoruz → artık kullanıcının verilerine sahibiz
+        setProfile(data);
       } catch (err) {
-        console.log("Profil alınamadı:", err);
+        console.log("❌ Profil alınamadı:", err);
         setHasError(true);
-        router.push("/login");
       }
     };
 
     fetchProfile();
   }, [accessToken]);
-  // useEffect sadece accessToken değiştiğinde yeniden çalışır
-  
+
   if (hasError) {
     return (
-      <div className="text-center text-red-600 dark:text-red-400 p-8">
-        Profil bilgileri alınamadı. Lütfen tekrar giriş yapınız.
+      <div className="max-w-xl mx-auto mt-10">
+        <ErrorMessage
+          type="network"
+          message="Profil bilgileri alınamadı."
+          statusCode={401}
+        />
       </div>
     );
   }
-  
-  if (!profile) return <ProfileSkeleton/>;
+
+  if (!profile) return <ProfileSkeleton />;
 
   return (
     <div className="min-h-[70vh] flex items-center justify-center p-6 bg-gray-50 dark:bg-zinc-950 ">

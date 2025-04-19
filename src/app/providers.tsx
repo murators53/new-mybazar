@@ -3,6 +3,7 @@
 
 // verileri daha performanslı, otomatik cache’li ve state management derdi olmadan yönetebiliyorsun.
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "sonner";
 // QueryClient: Veri fetch işlemlerini yönetecek olan client objesini oluşturmak için.
 // QueryClientProvider: Uygulamanın alt component’lerine React Query özelliğini sağlayan provider (sarmalayıcı).
 
@@ -15,6 +16,14 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   // ✅ useQuery: // Sunucudan veri çekmek için kullanılır (GET istekleri gibi düşün).
   // ✅ useMutation:// Sunucuya veri göndermek, silmek, güncellemek için kullanılır (POST, PUT, DELETE gibi işlemler).
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      {children}
+      <Toaster
+        position="top-right"
+        richColors
+        expand
+        duration={3000} // otomatik kapanma süresi
+      />
+    </QueryClientProvider>
   );
 }

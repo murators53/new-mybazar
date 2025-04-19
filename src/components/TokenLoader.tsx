@@ -10,49 +10,46 @@ export const TokenLoder = () => {
   //Global state'e accessToken'i kaydetmek icin Zustand fonskyonu aliyoruz
   const setLoading = useAuthStore((s) => s.setLoading);
   const setEmail = useAuthStore((s) => s.setEmail);
+  const setIsAdmin = useAuthStore((s) => s.setIsAdmin);
   const email = useAuthStore((s) => s.email);
   const setHydrated = useAuthStore((s) => s.setHydrated); // ✅ eklendi
   useEffect(() => {
     console.log("tokenloader calisti");
     const refreshToken = async () => {
       try {
-        // HTTP standardına göre GET isteklerinde body gönderilmez.
         const res = await fetch("/api/auth/refresh", {
           credentials: "include",
         });
-        // Sunucudaki refresh endpoint'e istek atılıyor
-        // refreshToken genelde httpOnly cookie'de tutulduğu için burada header gerekmez
-
-        /* if (!res.ok) {
-          // Yalnızca development'da bilgi ver
-           if (process.env.NODE_ENV === "development") {
-            console.info("🟡 Henüz giriş yapılmamış, refreshToken bulunamadı.");
-          } 
-          setLoading(false); // ❌ Token yoksa bile loading kapanmalı
-          return;
-        } */
+       
         if (!res.ok) {
-          console.log("🟡 Token alınamadı. Giriş yapılmamış olabilir."); // }
+          console.log("🟡 Token alınamadı. Giriş yapılmamış olabilir."); 
           return;
         }
-        // Eğer sunucu hata dönerse devam etme (401 vs.)
-        
-        const data = await res.json(); // body'i json'a cevirir
-        // Yeni accessToken JSON formatında geliyor
+
+        const data = await res.json(); 
+
+        console.log("🔵 Refresh sonrası gelen data:", data); 
+
         setAccessToken(data.accessToken);
-        // ✅ SADECE FARKLIYSA YAZ
+
         if (data.email && data.email !== email) {
           setEmail(data.email);
+          console.log("🔵 Email store'a kaydedildi:", data.email);
         }
-        console.log("✅ Token yenilendi:", data.accessToken);
-        // Yeni token'ı global state'e yaz → artık tüm app bu token'ı kullanabilir
+
+        if (typeof data.isAdmin === "boolean") {
+          setIsAdmin(data.isAdmin);
+          console.log("🟢 isAdmin store'a kaydedildi:", data.isAdmin); // 👈 Store kaydını gör
+        } else {
+          console.log("🟡 isAdmin bilgisi gelmedi veya boolean değil.");
+        }
+
       } catch (error) {
         console.log("Refresh token failed", error);
-        // Hata olursa konsola logla (örneğin cookie yoksa veya expire olduysa)
       } finally {
         setLoading(false);
-        setHydrated(); // ✅ burada hydrate işlemi tamamlandı diyoruz
-        //SSR'dan gelen bileşenlerin yanlış erken render edilmesini engeller.
+        setHydrated();
+        console.log("✅ Loading bitti, hydrate tamamlandı.");
       }
     };
 
@@ -60,5 +57,4 @@ export const TokenLoder = () => {
   }, []);
 
   return null;
-  // Bu component görünür bir şey döndürmez ama arka planda token yükleme işi yapar
 };

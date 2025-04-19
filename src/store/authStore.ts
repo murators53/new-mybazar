@@ -6,6 +6,8 @@ type AuthState = {
     isLoading: boolean;
     email: string | null;
     isHydrated: boolean;
+    isAdmin: boolean; // ✅ Admin bilgisi
+    setIsAdmin: (isAdmin: boolean) => void; // ✅ Admin setter
     setHydrated: () => void;
     setAccessToken: (token: string) => void; // accessToken'ı belleğe kaydetmek için fonksiyon}
     clearAccessToken: () => void; // accessToken'ı silmek için fonksiyon (örn. logout)
@@ -21,6 +23,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     isLoading: true,
     email: null,
     isHydrated: false,
+    isAdmin: false, // ✅ default admin false
     setHydrated: () => set({ isHydrated: true }),
     // ✅ Kullanıcı giriş yaptığında token'ı state'e yazar
     setAccessToken: (token) => set({ accessToken: token }),
@@ -28,6 +31,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     clearAccessToken: () => set({ accessToken: null }),
     setLoading: (loading) => set({ isLoading: loading }),
     setEmail: (email) => set({ email: email }),
+    setIsAdmin: (isAdmin) => set({ isAdmin }), // ✅ yeni fonksiyon
     logout: () => set({
         accessToken: null,
         email: null,

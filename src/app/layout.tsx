@@ -1,7 +1,6 @@
 import "./globals.css";
 import { TokenLoder } from "@/components/TokenLoader";
 import Providers from "./providers";
-import { Toaster } from "react-hot-toast";
 import ThemeWrapper from "./providers/ThemeWrapper";
 
 export const metadata = {
@@ -35,7 +34,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeWrapper>
           <Providers>
             <TokenLoder />
-            <Toaster position="top-right" />
             {children}
           </Providers>
         </ThemeWrapper>
