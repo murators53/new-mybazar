@@ -8,7 +8,7 @@ totalPrice	    Tüm ürünlerin toplam fiyatını döner
 persist	        Zustand içeriğini localStorage'a senkronlar ✅
 */
 
-import toast from 'react-hot-toast';
+import { toast } from "sonner";
 import { create } from 'zustand';//React state yönetimi
 import { persist } from 'zustand/middleware';
 // persist → Zustand state'ini localStorage'a senkronlamak için middleware

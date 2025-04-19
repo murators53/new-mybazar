@@ -1,24 +1,74 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyJWT } from "@/lib/jwt";
 import clientPromise from "@/lib/mongo";
-
-export async function GET() {
+import { ObjectId } from "mongodb";
+import { connectDb } from "@/lib/connectDb";
+import Product from "@/models/Product";
+export async function DELETE(req: NextRequest) {
   try {
+    const accessToken = req.headers.get("authorization")?.split(" ")[1];
+    if (!accessToken) {
+      return NextResponse.json({ message: "Yetkilendirme yok" }, { status: 401 });
+    }
+
+    const decoded = await verifyJWT(accessToken);
+    if (!decoded || !decoded.isAdmin) {
+      return NextResponse.json({ message: "Admin yetkisi yok" }, { status: 403 });
+    }
+
+    const { searchParams } = new URL(req.url);
+    const productId = searchParams.get("id");
+
+    if (!productId) {
+      return NextResponse.json({ message: "Ürün ID'si eksik" }, { status: 400 });
+    }
+
     const client = await clientPromise;
     const db = client.db();
-    const products = await db.collection("products").find().toArray();
+    const result = await db.collection("products").deleteOne({ _id: new ObjectId(productId) });
 
-    return NextResponse.json(products);
+    if (result.deletedCount === 0) {
+      return NextResponse.json({ message: "Ürün bulunamadı" }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: "Ürün silindi" }, { status: 200 });
   } catch (error) {
-    console.error("🔥 GET /api/product/admin error:", error);
-    return NextResponse.json({ message: "Server error" }, { status: 500 });
+    console.error("DELETE API Hatası:", error);
+    return NextResponse.json({ message: "Sunucu hatası" }, { status: 500 });
+  }
+}
+
+
+export async function GET(req: NextRequest) {
+  try {
+    await connectDb();
+
+    const id = req.nextUrl.searchParams.get("id");
+
+    if (id) {
+      // ✅ Eğer id varsa: Tek bir ürün getir
+      const product = await Product.findById(id);
+
+      if (!product) {
+        return NextResponse.json({ message: "Ürün bulunamadı" }, { status: 404 });
+      }
+
+      return NextResponse.json(product);
+    } else {
+      // ✅ id yoksa: Tüm ürünleri getir        
+      const products = await Product.find();
+      return NextResponse.json(products);
+    }
+  } catch (error) {
+    console.error("🔥 GET ürün hatası:", error);
+    return NextResponse.json({ message: "Bir hata oluştu" }, { status: 500 });
   }
 }
 
 export async function POST(req: NextRequest) {
   try {
     const authHeader = req.headers.get("Authorization");
-
+    
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }

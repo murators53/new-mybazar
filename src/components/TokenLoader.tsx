@@ -38,10 +38,7 @@ export const TokenLoder = () => {
         }
 
         if (typeof data.isAdmin === "boolean") {
-          setIsAdmin(data.isAdmin);
-          console.log("🟢 isAdmin store'a kaydedildi:", data.isAdmin); // 👈 Store kaydını gör
-        } else {
-          console.log("🟡 isAdmin bilgisi gelmedi veya boolean değil.");
+          setIsAdmin(data.isAdmin); // ← 🔥 Bu satır KRİTİK
         }
 
       } catch (error) {

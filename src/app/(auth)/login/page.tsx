@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/store/authStore";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { Eye, EyeOff } from "lucide-react";
 import { useRef } from "react";
 import Link from "next/link";
