@@ -40,6 +40,7 @@ export default function AdminProductsPage() {
             Authorization: `Bearer ${accessToken}`,
           },
         });
+        console.log("res",res);
 
         if (!res.ok) {
           throw new Error("Veri alınamadı");
@@ -101,11 +102,12 @@ export default function AdminProductsPage() {
     <div className="p-6">
       <div className="flex justify-end mb-4">
         <Link
-          href="/admin/products/new"
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition"
-        >
-          ➕ Ürün Ekle
-        </Link>
+  href="/admin/products/new"
+  className="flex items-center gap-2 px-5 py-2 rounded-full bg-blue-100 text-blue-700 hover:bg-blue-200 font-semibold text-sm transition"
+>
+  <span className="text-blue-500 text-lg">➕</span>
+  Ürün Ekle
+</Link>
       </div>
       <h2 className="text-2xl font-bold mb-6">📦 Ürünler</h2>
 
@@ -147,11 +149,13 @@ export default function AdminProductsPage() {
                 key={product._id}
                 className="border p-4 rounded shadow-sm flex flex-col items-center gap-2 transition-all duration-300"
               >
-                <img
-                  src={product.image}
-                  alt={product.title}
-                  className="h-24 w-24 object-contain"
-                />
+               <div className="relative w-full aspect-[4/3] bg-gray-100 dark:bg-zinc-800 overflow-hidden rounded-md">
+  <img
+    src={product.image}
+    alt={product.title}
+    className="w-full h-full object-cover"
+  />
+</div>
                 <h3 className="font-semibold text-lg">{product.title}</h3>
                 <p className="text-green-600 font-bold">{product.price}₺</p>
                 <p className="text-sm text-gray-500">
@@ -159,14 +163,12 @@ export default function AdminProductsPage() {
                 </p>
 
                 <div className="flex gap-2 mt-2">
-                  <button
-                    className="text-sm px-3 py-1 rounded bg-yellow-400 hover:bg-yellow-500 text-white font-semibold"
-                    onClick={() =>
-                      router.push(`/admin/products/${product._id}/edit`)
-                    }
-                  >
-                    ✏️ Düzenle
-                  </button>
+                <button
+    onClick={() => router.push(`/admin/products/${product._id}/edit`)}
+    className="flex items-center gap-2 px-4 py-1.5 rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 text-sm font-semibold transition"
+  >
+    <span className="text-blue-500">✏️</span> Düzenle
+  </button>
                   <Button
                     type="button"
                     onClick={() => {
@@ -174,9 +176,8 @@ export default function AdminProductsPage() {
                       setIsDeleteDialogOpen(true);
                     }}
                     disabled={isDeleting && selectedProductId === product._id}
-                    className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded text-sm transition disabled:opacity-50"
-                  >
-                    {isDeleting && selectedProductId === product._id
+                    className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-100 text-red-700 hover:bg-red-200 text-sm font-semibold transition disabled:opacity-50"                  >
+                        <span className="text-red-500">🗑️</span>{isDeleting && selectedProductId === product._id
                       ? "Siliniyor..."
                       : "Sil"}
                   </Button>

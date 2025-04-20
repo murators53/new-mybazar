@@ -32,10 +32,10 @@ export default function AdminProductEditPage() {
     const fetchProduct = async () => {
       try {
         const res = await fetch(`/api/product/admin?id=${id}`, {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          });
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
 
         if (!res.ok) {
           throw new Error("Ürün verisi alınamadı");
@@ -171,10 +171,13 @@ export default function AdminProductEditPage() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
+          className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              <span>Güncelleniyor...</span>
+            </>
           ) : (
             "Güncelle"
           )}
