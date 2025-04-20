@@ -1,28 +1,33 @@
-import mongoose, { Schema, model, models } from "mongoose";
+// src/models/Order.ts
+import mongoose from "mongoose";
 
-const orderSchema = new Schema(
+const OrderSchema = new mongoose.Schema(
   {
-    userEmail: {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    email: {
       type: String,
       required: true,
     },
     cartItems: [
       {
-        id: { type: String, required: true }, // Ürün ID'si
-        title: { type: String, required: true }, // Ürün adı
-        price: { type: Number, required: true }, // Ürün fiyatı
-        quantity: { type: Number, required: true }, // Adet
+        id: { type: String, required: true },
+        title: { type: String, required: true },
+        price: { type: Number, required: true },
+        quantity: { type: Number, required: true },
       },
     ],
-    totalPrice: {
-      type: Number,
-      required: true,
+    total: { type: Number, required: true },
+    status: {
+      type: String,
+      enum: ["pending", "completed", "cancelled"],
+      default: "pending",
     },
   },
-  { timestamps: true } // createdAt, updatedAt otomatik eklenir
+  { timestamps: true }
 );
 
-// Eğer model daha önce tanımlıysa onu kullan, yoksa yeni oluştur
-const Order = models.Order || model("Order", orderSchema);
-
-export default Order;
+export default mongoose.models.Order || mongoose.model("Order", OrderSchema);

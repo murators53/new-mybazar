@@ -126,7 +126,7 @@ export default function AdminProductEditPage() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="block font-semibold mb-1">Başlık</label>
+          <label className="block font-semibold mb-1">Ürün Başlığı</label>
           <input
             type="text"
             value={title}
@@ -138,7 +138,7 @@ export default function AdminProductEditPage() {
 
         <div className="flex gap-4">
           <div className="flex-1">
-            <label className="block font-semibold mb-1">Fiyat</label>
+            <label className="block font-semibold mb-1">Fiyat (₺)</label>
             <input
               type="number"
               value={price}
@@ -148,7 +148,7 @@ export default function AdminProductEditPage() {
             />
           </div>
           <div className="flex-1">
-            <label className="block font-semibold mb-1">Stok</label>
+            <label className="block font-semibold mb-1">Stok Adedi</label>
             <input
               type="number"
               value={stock}
@@ -161,7 +161,7 @@ export default function AdminProductEditPage() {
 
         {/* 🔁 Görsel güncellenirse: */}
         <div>
-          <label className="block font-semibold mb-1">Görsel</label>
+          <label className="block font-semibold mb-1">Ürün Görseli</label>
           <ImageUploader
             onUploadComplete={(file) => setCroppedFile(file)}
             existingImage={existingImage}
@@ -171,7 +171,7 @@ export default function AdminProductEditPage() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-fit  mx-auto flex items-center justify-center gap-2 bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-3 px-8 rounded transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting ? (
             <>
@@ -179,7 +179,7 @@ export default function AdminProductEditPage() {
               <span>Güncelleniyor...</span>
             </>
           ) : (
-            "Güncelle"
+            "Ürünü Güncelle"
           )}
         </button>
       </form>

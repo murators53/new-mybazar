@@ -19,39 +19,46 @@ export default function AdminProductCreatePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     if (!accessToken) {
-      toast.error("Yetkilendirme hatası", { description: "Lütfen tekrar giriş yapın." });
+      toast.error("Yetkilendirme hatası", {
+        description: "Lütfen tekrar giriş yapın.",
+      });
       return;
     }
-  
+
     if (!croppedFile) {
-      toast.error("Ürün görseli eksik", { description: "Lütfen bir ürün görseli seçin." });
+      toast.error("Ürün görseli eksik", {
+        description: "Lütfen bir ürün görseli seçin.",
+      });
       return;
     }
-  
+
     try {
       setIsSubmitting(true);
       const loadingToast = toast.loading("Görsel yükleniyor...");
-  
+
       // 🔥 1. Cloudinary'ye yükle
       const formData = new FormData();
       formData.append("file", croppedFile);
       formData.append("upload_preset", "mybazar_upload");
-  
-      const uploadRes = await fetch("https://api.cloudinary.com/v1_1/dmkvrdab7/image/upload", {
-        method: "POST",
-        body: formData,
-      });
-  
+
+      const uploadRes = await fetch(
+        "https://api.cloudinary.com/v1_1/dmkvrdab7/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
       const uploadData = await uploadRes.json();
-  
+
       if (!uploadData.secure_url) {
         throw new Error("Görsel yüklenemedi");
       }
-  
+
       const imageUrl = uploadData.secure_url;
-  
+
       // 🔥 2. Ürünü kaydet
       const productData = {
         title: title.trim(),
@@ -59,7 +66,7 @@ export default function AdminProductCreatePage() {
         stock,
         image: imageUrl,
       };
-  
+
       const res = await fetch("/api/product/admin", {
         method: "POST",
         headers: {
@@ -68,20 +75,19 @@ export default function AdminProductCreatePage() {
         },
         body: JSON.stringify(productData),
       });
-  
+
       if (!res.ok) {
         const errorData = await res.json();
         throw new Error(errorData.message || "Ürün eklenemedi");
       }
-  
+
       // 🎯 Success işlemleri
       toast.success("🎉 Ürün başarıyla kaydedildi!");
       toast.dismiss(loadingToast); // yükleniyor mesajını kapat
-  
+
       setTimeout(() => {
         router.push("/admin/products");
       }, 1500); // biraz gecikmeyle yönlendiriyoruz ki mesajı görebilelim
-  
     } catch (error: any) {
       console.error("Ürün kaydedilirken hata:", error);
       toast.error(error.message || "Bilinmeyen hata oluştu.");
@@ -89,7 +95,6 @@ export default function AdminProductCreatePage() {
       setIsSubmitting(false);
     }
   };
-  
 
   return (
     <div className="p-6 max-w-2xl mx-auto bg-white dark:bg-zinc-900 rounded shadow-md">
@@ -136,14 +141,16 @@ export default function AdminProductCreatePage() {
         {/* Görsel Yükleyici */}
         <div>
           <label className="block font-semibold mb-1">Ürün Görseli</label>
-          <ImageUploader onUploadComplete={(croppedFile) => setCroppedFile(croppedFile)} />
+          <ImageUploader
+            onUploadComplete={(croppedFile) => setCroppedFile(croppedFile)}
+          />
         </div>
 
         {/* Kaydet Butonu */}
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-fit mx-auto flex items-center justify-center gap-2 bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-3 px-8 rounded transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
           {isSubmitting ? "Yükleniyor..." : "Ürünü Kaydet"}
