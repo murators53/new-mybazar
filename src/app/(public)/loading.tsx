@@ -4,7 +4,6 @@ import LayoutWrapper from "@/components/shared/LayoutWrapper";
 import ProductSkeleton from "@/components/ui/skeletons/ProductSkeleton";
 
 export default function GlobalLoading() {
-  console.log("sayfa yukleniyor yazacak sayfa");
   return (
     <LayoutWrapper>
        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 p-6">

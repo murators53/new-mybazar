@@ -9,19 +9,13 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import DeleteDialog from "@/components/DeleteProductDialog";
+import { ProductCart } from "@/types/product";
 
-type Product = {
-  _id: string;
-  title: string;
-  price: number;
-  stock: number;
-  image: string;
-  isDeleting?: boolean;
-};
+
 
 export default function AdminProductsPage() {
   const accessToken = useAuthStore((s) => s.accessToken);
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<ProductCart[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const router = useRouter();

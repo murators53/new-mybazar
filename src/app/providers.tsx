@@ -19,7 +19,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     <QueryClientProvider client={queryClient}>
       {children}
       <Toaster
-        position="top-right"
+        position="top-left"
         richColors
         expand
         duration={3000} // otomatik kapanma süresi

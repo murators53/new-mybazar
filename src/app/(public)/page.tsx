@@ -7,6 +7,7 @@ type Product = {
   title: string;
   price: number;
   thumbnail: string;
+  images: string[];
 };
 
 async function getProducts() {
@@ -29,7 +30,7 @@ export default async function Home() {
             id={product.id.toString()}
             title={product.title}
             price={product.price}
-            image={product.thumbnail}
+            image={[product.thumbnail]}
           />
         ))}
       </div>

@@ -2,9 +2,6 @@
 
 import FilterSidebar from "@/components/FilterSidebar";
 import ProductCard from "@/components/ProductCard";
-import SearchResultSkeleton from "@/components/ui/skeletons/SearchResultSkeleton";
-import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 type Product = {
@@ -16,13 +13,26 @@ type Product = {
   rating: number;
   stock: number;
   category: string;
-  images: string[]; // ✅ bunu ekle
+  images:string[];
 };
 
-export default function SearchPage() {
-  const searchParams = useSearchParams();
-  const query = searchParams.get("q");
+type ProductCart = {
+  id: number;
+  title: string;
+  price: number;
+  thumbnail?: string;
+  images: string[];
+};
 
+
+
+export default function CategoryClientPage({
+  slug,
+  products,
+}: {
+  slug: string;
+  products: Product[];
+}) {
   const [tempMaxPrice, setTempMaxPrice] = useState<number>(1000);
   const [tempMinPrice, setTempMinPrice] = useState<number>(0);
   const [appliedMinPrice, setAppliedMinPrice] = useState<number>(0);
@@ -36,30 +46,7 @@ export default function SearchPage() {
   >("all");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["search", query],
-    queryFn: async () => {
-      const res = await fetch(
-        `https://dummyjson.com/products/search?q=${query}`
-      );
-      const json = await res.json();
-      return json.products as Product[];
-    },
-    enabled: !!query,
-  });
-
-  if (!query) return <div className="p-8 text-center">Arama terimi yok.</div>;
-  if (isLoading) return <SearchResultSkeleton title={`"${query}"`} />;
-  if (error)
-    return (
-      <div className="p-8 text-center text-red-600 dark:text-red-400">
-        Arama sırasında bir hata oluştu. Lütfen tekrar deneyin.
-      </div>
-    );
-  if (!data || data.length === 0)
-    return <div className="p-8 text-center">Sonuç bulunamadı.</div>;
-
-  const filteredAndSortedProducts = (data ?? [])
+  const filteredAndSortedProducts = (products ?? [])
     .filter((p) => p.price >= appliedMinPrice && p.price <= appliedMaxPrice)
     .filter(
       (p) => selectedBrands.length === 0 || selectedBrands.includes(p.brand)
@@ -93,8 +80,6 @@ export default function SearchPage() {
     {}
   );
 
-  const dynamicAvailableBrands = Object.keys(dynamicBrandCounts);
-
   const dynamicCategoryCounts = filteredAndSortedProducts.reduce(
     (acc: Record<string, number>, p) => {
       acc[p.category] = (acc[p.category] || 0) + 1;
@@ -113,13 +98,10 @@ export default function SearchPage() {
     setAppliedMinPrice(0);
     setAppliedMaxPrice(100000);
   };
-  
 
   return (
     <div className="flex">
       <FilterSidebar
-        brandCounts={dynamicBrandCounts}
-        availableBrands={dynamicAvailableBrands}
         tempMinPrice={tempMinPrice}
         tempMaxPrice={tempMaxPrice}
         setTempMinPrice={setTempMinPrice}
@@ -138,6 +120,7 @@ export default function SearchPage() {
         setStockStatus={setStockStatus}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
+        brandCounts={dynamicBrandCounts}
         categoryCounts={dynamicCategoryCounts}
       />
 
@@ -227,7 +210,7 @@ export default function SearchPage() {
 
         {/* Başlık */}
         <div className="mb-2 flex items-center justify-between">
-          <h2 className="text-2xl font-bold">{`"${query}"`} için sonuçlar</h2>
+          <h2 className="text-2xl font-bold">{`${slug.replace(/-/g, " ")}`} Kategorisindeki Ürünler</h2>
           <span className="text-sm text-gray-600 dark:text-gray-400 pt-2 pl-2">
             <strong>{filteredAndSortedProducts.length}</strong> ürün bulundu
           </span>
@@ -235,14 +218,13 @@ export default function SearchPage() {
 
         {/* Ürünler */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {filteredAndSortedProducts.map((product) => (
+          {filteredAndSortedProducts.map((product: ProductCart) => (
             <ProductCard
               key={product.id}
               id={product.id.toString()}
               title={product.title}
               price={product.price}
               image={product.images}
-              product={product}
             />
           ))}
         </div>

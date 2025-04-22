@@ -13,7 +13,6 @@ const CategoryMenu = () => {
       setCategories(data);
     };
 
-
     fetchCategories();
   }, []); /* ✅ Ne zaman [] kullanmalıyım?
     Sadece bir kez çalışsın istiyorsan: []
@@ -21,9 +20,9 @@ const CategoryMenu = () => {
     Her renderda çalışsın istiyorsan: hiç koyma (ama dikkatli ol, sonsuz döngü olabilir)
   */
 
-
   return (
-    <div className="bg-blue-50 dark:bg-zinc-900 border-b border-gray-200 dark:border-zinc-700 py-2 px-4 flex flex-wrap gap-3 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-zinc-700">      {categories.map((cat) => {
+    <div className="bg-blue-50 dark:bg-zinc-900 border-b border-gray-200 dark:border-zinc-700 py-2 px-4 flex flex-wrap gap-3 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-zinc-700">
+      {categories.map((cat) => {
         return (
           <Link
             key={cat.url}
@@ -31,7 +30,9 @@ const CategoryMenu = () => {
             className="text-sm hover:underline capitalize whitespace-nowrap"
           >
             {/* {cat.name} */}
-            <button className="px-4 py-2 rounded-full bg-white dark:bg-zinc-800 text-gray-800 dark:text-white shadow-sm border border-gray-200 dark:border-zinc-700 hover:bg-gray-100 dark:hover:bg-zinc-700 transition text-sm capitalize">{cat.name}</button>
+            <button className="px-4 py-2 rounded-full bg-white dark:bg-zinc-800 text-gray-800 dark:text-white shadow-sm border border-gray-200 dark:border-zinc-700 hover:bg-gray-100 dark:hover:bg-zinc-700 transition text-sm capitalize">
+              {cat.name}
+            </button>
             {/* {cat.name.replace('-', ' ')} */}
           </Link>
         );
@@ -41,24 +42,3 @@ const CategoryMenu = () => {
 };
 
 export default CategoryMenu;
-
-/* 
-<DropdownMenu>
-  <DropdownMenuTrigger asChild>
-    <Button variant="outline">🗂️ Kategoriler</Button>
-  </DropdownMenuTrigger>
-
-  <DropdownMenuContent className="max-h-[400px] overflow-y-auto w-[250px]">
-    {Object.entries(groupedCategories).map(([groupName, items]) => (
-      <div key={groupName} className="mb-2">
-        <h3 className="text-xs font-semibold text-gray-500 px-2 uppercase">{groupName}</h3>
-        {items.map((cat) => (
-          <DropdownMenuItem key={cat}>
-            <Link href={`/category/${cat}`} className="capitalize">{cat.replace(/-/g, " ")}</Link>
-          </DropdownMenuItem>
-        ))}
-      </div>
-    ))}
-  </DropdownMenuContent>
-</DropdownMenu>
-*/
