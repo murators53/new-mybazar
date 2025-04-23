@@ -7,6 +7,10 @@ type Product = {
   title: string;
   price: number;
   thumbnail: string;
+  brand: string;
+  rating: number;
+  stock: number;
+  category: string;
   images: string[];
 };
 
@@ -23,15 +27,16 @@ export default async function Home() {
 
   return (
     <LayoutWrapper>
-      <div className="grid grid-cols-1  sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 p-6">
-        {products.map((product: Product) => (
+      <div className="grid grid-cols-1 max-w-[1600px] mx-auto sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  gap-5 p-6">
+        {products.map((product:Product) => (
           <ProductCard
-            key={product.id}
-            id={product.id.toString()}
-            title={product.title}
-            price={product.price}
-            image={[product.thumbnail]}
-          />
+          key={product.id}
+          id={product.id.toString()}
+          title={product.title}
+          price={product.price}
+          image={product.images}
+          product={product}
+        />
         ))}
       </div>
     </LayoutWrapper>

@@ -1,7 +1,15 @@
 "use client";
 
 import { toTitleCase } from "@/utils/toTitleCase";
-import { Building2, Folder, Package, Search, Star, Tag } from "lucide-react";
+import {
+  Building2,
+  Folder,
+  MoveLeftIcon,
+  Package,
+  Search,
+  Star,
+  Tag,
+} from "lucide-react";
 
 interface FilterSidebarProps {
   availableBrands?: string[];
@@ -22,6 +30,8 @@ interface FilterSidebarProps {
   selectedCategory?: string | null;
   setSelectedCategory?: (value: string | null) => void;
   brandCounts?: Record<string, number>;
+  isFilterOpen: boolean;
+  setIsFilterOpen: (value: boolean) => void;
 }
 
 export default function FilterSidebar({
@@ -40,15 +50,29 @@ export default function FilterSidebar({
   selectedCategory,
   setSelectedCategory,
   brandCounts,
+  isFilterOpen,
+  setIsFilterOpen,
 }: FilterSidebarProps) {
   return (
-    <div className="w-64 border-r dark:border-zinc-700 bg-white dark:bg-zinc-900">
-      <h3 className="text-2xl font-bold border-b-2 border-gray-200 p-6">
-        Filtreler
+    <div
+      className={`${
+        !isFilterOpen ? "right-[100%] translate-x-0" : "-translate-x-[0%]"
+      }  transition-transform duration-500 ease-out absolute sm:static sm:block z-40 w-full sm:w-64 border-r dark:border-zinc-700 bg-white dark:bg-zinc-900`}
+    >
+      <h3 className="text-2xl flex justify-between items-center font-bold border-b-2 border-gray-200 p-6">
+        <span>Filtreler</span>
+        <button
+          className={`${
+            isFilterOpen && ""
+          } sm:hidden block hover:bg-blue-200 p-1 rounded-full`}
+          onClick={() => setIsFilterOpen(false)}
+        >
+          <MoveLeftIcon />
+        </button>
       </h3>
 
       {categoryCounts && (
-        <div className=" border-b-2 border-gray-200 py-4 px-6">
+        <div className="border-b-2 border-gray-200 py-4 px-6">
           <label className=" mb-2 text-base font-semibold flex items-center gap-2">
             <Folder size={16} /> Kategoriler
           </label>
@@ -116,7 +140,10 @@ export default function FilterSidebar({
             className="w-[74px] px-1 py-2 text-sm border rounded-lg text-center dark:bg-zinc-800 dark:border-zinc-700"
           />
           <button
-            onClick={handleApplyFilter}
+            onClick={() => {
+              handleApplyFilter();
+              setIsFilterOpen(false);
+              window.scrollTo({ top: 0, behavior: "smooth" });            }}
             className="bg-blue-200 text-black hover:bg-blue-100 duration-100 p-[5px] rounded-lg ml-1"
           >
             <Search width={20} />
@@ -222,7 +249,10 @@ export default function FilterSidebar({
 
       {/* Uygula */}
       <button
-        onClick={handleApplyFilter}
+        onClick={() => {
+          setIsFilterOpen(false);
+          handleApplyFilter();
+          window.scrollTo({ top: 0, behavior: "smooth" });        }}
         className="w-full bg-blue-300 hover:bg-blue-400 text-black py-2 rounded transition"
       >
         Filtreleri Uygula

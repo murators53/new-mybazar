@@ -66,7 +66,7 @@ const Navbar = () => {
   return (
     <header className="w-full shadow-sm sticky top-0 bg-white dark:bg-zinc-900 text-black dark:text-white z-50 border-b dark:border-zinc-700 transition-colors duration-300">
       {" "}
-      <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div className="mx-auto max-w-[1600px] px-6 py-3 flex justify-between items-center">
         <Link href={"/"} className="text-xl font-bold">
           my<span className="text-blue-800 dark:text-blue-400">Bāzar</span>
         </Link>

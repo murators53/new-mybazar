@@ -4,8 +4,9 @@ import FilterSidebar from "@/components/FilterSidebar";
 import ProductCard from "@/components/ProductCard";
 import SearchResultSkeleton from "@/components/ui/skeletons/SearchResultSkeleton";
 import { useQuery } from "@tanstack/react-query";
+import { Filter, FilterXIcon, MoveLeftIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import {  useState } from "react";
 
 type Product = {
   id: number;
@@ -31,6 +32,7 @@ export default function SearchPage() {
 
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [minimumRating, setMinimumRating] = useState<number>(0);
+  const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
   const [stockStatus, setStockStatus] = useState<
     "all" | "inStock" | "outOfStock"
   >("all");
@@ -113,10 +115,9 @@ export default function SearchPage() {
     setAppliedMinPrice(0);
     setAppliedMaxPrice(100000);
   };
-  
 
   return (
-    <div className="flex">
+    <div className="flex max-w-[1600px] mx-auto">
       <FilterSidebar
         brandCounts={dynamicBrandCounts}
         availableBrands={dynamicAvailableBrands}
@@ -139,11 +140,13 @@ export default function SearchPage() {
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
         categoryCounts={dynamicCategoryCounts}
+        isFilterOpen={isFilterOpen}
+        setIsFilterOpen={setIsFilterOpen}
       />
 
-      <div className="flex-1 p-4">
+      <div   className="flex-1 p-4">
         {/* Ürün Sayısı ve Sıralama */}
-        <div className=" flex justify-between items-center mb-6 gap-2">
+        <div className=" flex justify-between items-center mb-6 gap-2 ml-3">
           {(selectedBrands.length > 0 ||
             minimumRating !== 0 ||
             appliedMinPrice !== 0 ||
@@ -151,7 +154,7 @@ export default function SearchPage() {
             selectedCategory) && (
             <div className="flex-1 min-w-0 h-[32px]">
               <div
-                className="flex flex-nowrap  overflow-x-auto gap-2 rounded-lg border border-gray-100 [&::-webkit-scrollbar]:h-[8px] [&::-webkit-scrollbar-track]:bg-gray-100
+                className="flex flex-nowrap ml-6 sm:m-0  overflow-x-auto gap-2 rounded-2xl  [&::-webkit-scrollbar]:h-[8px] [&::-webkit-scrollbar-track]:bg-gray-100
           [&::-webkit-scrollbar-thumb]:bg-gray-300"
               >
                 {/* Seçilen Markalar */}
@@ -209,6 +212,14 @@ export default function SearchPage() {
             </div>
           )}
           <div className="flex-shrink-0 ml-auto">
+            <button
+              className={`${
+                isFilterOpen && ""
+              }  sm:hidden block hover:bg-blue-200 p-1 rounded-full absolute left-[12.5px] top-[153px] `}
+              onClick={() => setIsFilterOpen(true)}
+            >
+              <Filter />
+            </button>
             <select
               value={sortOption}
               onChange={(e) => setSortOption(e.target.value)}
@@ -234,7 +245,11 @@ export default function SearchPage() {
         </div>
 
         {/* Ürünler */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div
+          className={`${
+            isFilterOpen && "hidden"
+          } grid grid-cols-1  sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4`}
+        >
           {filteredAndSortedProducts.map((product) => (
             <ProductCard
               key={product.id}
