@@ -2,11 +2,12 @@
 
 import FilterSidebar from "@/components/FilterSidebar";
 import ProductCard from "@/components/ProductCard";
+import FilterSidebarSkeleton from "@/components/ui/skeletons/FilterSidebarSkeleton";
 import SearchResultSkeleton from "@/components/ui/skeletons/SearchResultSkeleton";
 import { useQuery } from "@tanstack/react-query";
-import { Filter, FilterXIcon, MoveLeftIcon } from "lucide-react";
+import { Filter } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import {  useState } from "react";
+import { useState } from "react";
 
 type Product = {
   id: number;
@@ -51,7 +52,14 @@ export default function SearchPage() {
   });
 
   if (!query) return <div className="p-8 text-center">Arama terimi yok.</div>;
-  if (isLoading) return <SearchResultSkeleton title={`"${query}"`} />;
+  if (isLoading) {
+    return (
+      <div className="flex max-w-[1600px] mx-auto ">
+        <FilterSidebarSkeleton />
+        <SearchResultSkeleton title={`"${query}"`} />
+      </div>
+    );
+  }
   if (error)
     return (
       <div className="p-8 text-center text-red-600 dark:text-red-400">
@@ -88,7 +96,7 @@ export default function SearchPage() {
 
   const dynamicBrandCounts = filteredAndSortedProducts.reduce(
     (acc: Record<string, number>, p) => {
-      if (!p.brand) return acc; // 🔥 Eğer brand yoksa sayma
+      if (!p.brand) return acc;
       acc[p.brand] = (acc[p.brand] || 0) + 1;
       return acc;
     },
@@ -144,7 +152,7 @@ export default function SearchPage() {
         setIsFilterOpen={setIsFilterOpen}
       />
 
-      <div   className="flex-1 p-4">
+      <div className="flex-1 p-4">
         {/* Ürün Sayısı ve Sıralama */}
         <div className=" flex justify-between items-center mb-6 gap-2 ml-3">
           {(selectedBrands.length > 0 ||

@@ -32,7 +32,7 @@ const CartPage = () => {
   if (cart.length === 0) {
     return <EmptyCart />;
   }
-  
+
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-4">
       <h2 className="text-2xl font-bold mb-4">Sepet</h2>
@@ -86,25 +86,34 @@ const CartPage = () => {
         </div>
       ))}
 
-      <div className="flex justify-between items-center gap-2 border-t pt-4">
-        <p className="text-xl font-bold">Toplam: {totalPrice().toFixed(2)}₺</p>
-        <Button
-          variant="outline"
-          className="transition hover:scale-105"
-          onClick={clearCart}
-        >
-          🗑️ Sepeti Temizle
-        </Button>
-        <Button onClick={() => handleSaveCart(accessToken, cart, toast)}>
-          🛒 Sepeti Kaydet
-        </Button>
-        <Button
-          onClick={() => handleCheckOut(accessToken, cart, toast, clearCart)}
-          className="bg-green-400  text-white transition hover:scale-105"
-        >
-          ✅ Siparişi Tamamla
-        </Button>
-      </div>
+<div className="border-t pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+  <p className="text-xl font-bold text-center sm:text-left">
+    Toplam: {totalPrice().toLocaleString("tr-TR", { minimumFractionDigits: 2 })}₺
+  </p>
+
+  <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+    <Button
+      variant="outline"
+      className="w-full sm:w-auto transition hover:scale-105"
+      onClick={clearCart}
+    >
+      🗑️ Sepeti Temizle
+    </Button>
+    <Button
+      className="w-full sm:w-auto transition hover:scale-105"
+      onClick={() => handleSaveCart(accessToken, cart, toast)}
+    >
+      🛒 Sepeti Kaydet
+    </Button>
+    <Button
+      onClick={() => handleCheckOut(accessToken, cart, toast, clearCart)}
+      className="w-full sm:w-auto bg-green-400 text-white transition hover:scale-105"
+    >
+      ✅ Siparişi Tamamla
+    </Button>
+  </div>
+</div>
+
     </div>
   );
 };

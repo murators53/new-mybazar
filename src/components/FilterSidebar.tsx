@@ -151,6 +151,63 @@ export default function FilterSidebar({
         </div>
       </div>
 
+      {brandCounts && (
+        <div className="border-b-2 border-gray-200 p-6">
+          <label className=" mb-2 text-base font-semibold flex items-center gap-2">
+            <Building2 size={16} /> Markalar
+          </label>
+          <div
+            className="flex flex-col gap-2 max-h-48 overflow-y-auto pl-2 [&::-webkit-scrollbar]:w-3 [&::-webkit-scrollbar-track]:bg-gray-100
+  [&::-webkit-scrollbar-thumb]:bg-gray-300"
+          >
+            {Object.keys(brandCounts)
+              .filter((brand) => brand.trim() !== "" && brandCounts[brand] > 0) // sadece boş olmayan ve sayısı 0'dan büyük olanlar
+              .sort()
+              .map((brand) => (
+                <label key={brand} className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={selectedBrands.includes(brand)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedBrands([...selectedBrands, brand]);
+                      } else {
+                        setSelectedBrands(
+                          selectedBrands.filter((b) => b !== brand)
+                        );
+                      }
+                    }}
+                  />
+                  {brand}
+                </label>
+              ))}
+          </div>
+        </div>
+      )}
+
+      {/* Minimum Rating */}
+      <div className="border-b-2 border-gray-200 p-6">
+        <label className="mb-2 text-base font-semibold flex items-center gap-2">
+          <Star size={16} /> Minimum Puan
+        </label>
+        <div className="flex flex-col gap-2 pl-2">
+          {[4, 3, 2, 1].map((rating) => (
+            <label key={rating} className="flex items-center gap-2 text-sm">
+              <input
+                type="radio"
+                name="minimumRating"
+                value={rating}
+                checked={minimumRating === rating}
+                onChange={() => setMinimumRating(rating)}
+              />
+              {/* sadece yıldız ve rating */}⭐ {rating} ve üstü
+            </label>
+          ))}
+        </div>
+      </div>
+
+      
+
       {/* Stok Durumu */}
       <div className=" border-b-2 border-gray-200 p-6">
         <label className=" mb-2 text-base font-semibold flex items-center gap-2">
@@ -191,61 +248,6 @@ export default function FilterSidebar({
           </label>
         </div>
       </div>
-
-      {/* Minimum Rating */}
-      <div className="border-b-2 border-gray-200 p-6">
-        <label className="mb-2 text-base font-semibold flex items-center gap-2">
-          <Star size={16} /> Minimum Puan
-        </label>
-        <div className="flex flex-col gap-2 pl-2">
-          {[4, 3, 2, 1].map((rating) => (
-            <label key={rating} className="flex items-center gap-2 text-sm">
-              <input
-                type="radio"
-                name="minimumRating"
-                value={rating}
-                checked={minimumRating === rating}
-                onChange={() => setMinimumRating(rating)}
-              />
-              {/* sadece yıldız ve rating */}⭐ {rating} ve üstü
-            </label>
-          ))}
-        </div>
-      </div>
-
-      {brandCounts && (
-        <div className="border-b-2 border-gray-200 p-6">
-          <label className=" mb-2 text-base font-semibold flex items-center gap-2">
-            <Building2 size={16} /> Markalar
-          </label>
-          <div
-            className="flex flex-col gap-2 max-h-48 overflow-y-auto pl-2 [&::-webkit-scrollbar]:w-3 [&::-webkit-scrollbar-track]:bg-gray-100
-  [&::-webkit-scrollbar-thumb]:bg-gray-300"
-          >
-            {Object.keys(brandCounts)
-              .filter((brand) => brand.trim() !== "" && brandCounts[brand] > 0) // sadece boş olmayan ve sayısı 0'dan büyük olanlar
-              .sort()
-              .map((brand) => (
-                <label key={brand} className="flex items-center gap-2 text-sm">
-                  <input
-                    type="checkbox"
-                    checked={selectedBrands.includes(brand)}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setSelectedBrands([...selectedBrands, brand]);
-                      } else {
-                        setSelectedBrands(
-                          selectedBrands.filter((b) => b !== brand)
-                        );
-                      }
-                    }}
-                  />
-                  {brand}
-                </label>
-              ))}
-          </div>
-        </div>
-      )}
 
       {/* Uygula */}
       <button
