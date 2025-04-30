@@ -47,7 +47,7 @@ const LoginPage = () => {
 
       // Eğer yanıt başarılıysa (200 OK vs.)
       if (res.ok) {
-        const { jwtApiRouteTestControl, accessToken, email } = await res.json(); // JWT token'ı backend'den alıyoruz
+        const { isAdmin, accessToken, email } = await res.json(); // JWT token'ı backend'den alıyoruz
         setAccessToken(accessToken); // Zustand store’a yaz
         setEmail(email);
 
@@ -56,8 +56,12 @@ const LoginPage = () => {
         });
         
         setTimeout(() => {
-          router.push("/");
-        }, 1600); // 100ms gecikmeli ki mesaj kaybolunca yönlensin
+          if (isAdmin) {
+            router.push('/admin')
+          } else {
+            router.push("/");
+          }
+        }, 600);  // 100ms gecikmeli ki mesaj kaybolunca yönlensin
       }
     } catch (err) {
       toast.error("Sunucu hatası!");

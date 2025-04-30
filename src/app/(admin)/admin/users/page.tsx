@@ -75,7 +75,7 @@ export default function AdminUsersPage() {
 
   if (loading) {
     return (
-      <div className="p-6 max-w-5xl mx-auto bg-white dark:bg-zinc-900 rounded shadow-md">
+      <div className="p-6  max-w-5xl mx-auto bg-white dark:bg-zinc-900 rounded shadow-md">
         <h2 className="text-2xl font-bold mb-6">👥 Kullanıcılar</h2>
 
         <Skeleton className="h-8 w-1/3 mb-6" />
@@ -93,10 +93,10 @@ export default function AdminUsersPage() {
   }
 
   return (
-    <div className="p-6 max-w-5xl mx-auto bg-white dark:bg-zinc-900 rounded shadow-md">
+    <div className="p-6 ml-8 sm:ml-0  max-w-5xl mx-auto bg-white dark:bg-zinc-900 rounded shadow-md">
       <h2 className="text-2xl font-bold mb-6">👥 Kullanıcılar</h2>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto min-w-[450px]">
         {users.length === 0 ? (
           <div className="text-center text-gray-500 dark:text-gray-400 py-12">
             Henüz kayıtlı bir kullanıcı yok.

@@ -32,7 +32,7 @@ const CartPage = () => {
   if (cart.length === 0) {
     return <EmptyCart />;
   }
-  console.log("cart", cart);
+  
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-4">
       <h2 className="text-2xl font-bold mb-4">Sepet</h2>
@@ -86,7 +86,7 @@ const CartPage = () => {
         </div>
       ))}
 
-      <div className="flex justify-between items-center border-t pt-4">
+      <div className="flex justify-between items-center gap-2 border-t pt-4">
         <p className="text-xl font-bold">Toplam: {totalPrice().toFixed(2)}₺</p>
         <Button
           variant="outline"

@@ -25,6 +25,7 @@ const Navbar = () => {
   const theme = useThemeStore((s) => s.theme); // ✅ Tema bilgisi
   const toggleTheme = useThemeStore((s) => s.toggleTheme);
   const email = useAuthStore((s) => s.email);
+  const isAdmin = useAuthStore((s) => s.isAdmin);
   const accessToken = useAuthStore((s) => s.accessToken);
   const setEmail = useAuthStore((s) => s.setEmail);
   const isLoading = useAuthStore((s) => s.isLoading);
@@ -48,6 +49,7 @@ const Navbar = () => {
           },
         });
         const data = await res.json();
+         
         if (data.email) {
           setEmail(data.email);
         }
@@ -89,9 +91,13 @@ const Navbar = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-white dark:bg-zinc-900">
                 <DropdownMenuItem asChild>
-                  <Link href="/profile" className="dropdown-link">
+                  {isAdmin?(<Link href="/admin" className="dropdown-link bg-green-400 ">
+                    👑 Admin Panel
+                  </Link>):(
+                    <Link href="/profile" className="dropdown-link">
                     👤 Profil
                   </Link>
+                  )}
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link href="/profile/orders" className="dropdown-link">
@@ -120,7 +126,7 @@ const Navbar = () => {
 
             <button
               onClick={toggleTheme}
-              className="p-1 rounded hover:bg-gray-200 dark:hover:bg-zinc-700 border border-transparent hover:border-gray-300 dark:hover:border-zinc-600 transition-colors duration-200"
+              className="p-[2px] rounded hover:bg-gray-200 dark:hover:bg-zinc-700  hover:border-gray-300 dark:hover:border-zinc-600 transition-colors duration-200"
               aria-label="Tema değiştir"
             >
               {theme === "dark" ? (

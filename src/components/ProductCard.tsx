@@ -4,7 +4,7 @@ import { useCartStore } from "@/store/cartStore";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface ProductProps {
   id: string;
@@ -47,6 +47,7 @@ const ProductCard = ({ id, title, price, image, product }: ProductProps) => {
         <div className="absolute w-full h-full flex flex-row items-center justify-center">
           {product?.images.map((image, i) => (
             <p
+              key={i}
               onMouseEnter={() => {
                 setViewedPicture(image);
                 setPictureOrderPage(i);
@@ -57,6 +58,7 @@ const ProductCard = ({ id, title, price, image, product }: ProductProps) => {
           <span className="absolute bottom-[18%]  z-20 bg-gray-100 shadow-2xl rounded-lg  flex flex-row justify-center items-center gap-[3px]">
             {product?.images.map((_, i) => (
               <p
+                key={i}
                 className={`w-[10px] h-[10px] rounded-full duration-200 ease-in-out ${
                   pictureOrderPage === i ? "bg-blue-400" : "bg-blue-200"
                 }`}

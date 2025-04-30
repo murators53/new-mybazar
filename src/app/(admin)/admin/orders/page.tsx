@@ -50,7 +50,7 @@ export default function AdminOrdersPage() {
     return (
       <div className="p-6">
         <h2 className="text-2xl font-bold mb-6">📦 Tüm Siparişler</h2>
-        <div className="grid gap-4">
+        <div className="grid gap-4 ">
           {Array.from({ length: 4 }).map((_, index) => (
             <div
               key={index}
@@ -80,7 +80,7 @@ export default function AdminOrdersPage() {
   }
 
   return (
-    <div className="p-6">
+    <div className="p-6 ml-10 sm:m-0">
       <h2 className="text-2xl font-bold mb-6">📦 Tüm Siparişler</h2>
       <div className="grid gap-4">
         {orders.map((order) => (

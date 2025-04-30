@@ -1,9 +1,10 @@
 "use client";
 
-import { Moon, Sun, LogOut } from "lucide-react";
+import { Moon, Sun, LogOut, HomeIcon } from "lucide-react";
 import { useThemeStore } from "@/store/themeStore";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function AdminNavbar() {
   const theme = useThemeStore((s) => s.theme);
@@ -23,6 +24,9 @@ export default function AdminNavbar() {
     <header className="flex items-center justify-between p-4 border-b dark:border-zinc-700 bg-white dark:bg-zinc-900">
       <h1 className="text-lg font-bold">myBāzar Admin</h1>
       <div className="flex items-center gap-4">
+        <Link href={'/'} className="hover:opacity-80">
+          <HomeIcon className="w-6 h-6" />
+        </Link>
         <button onClick={toggleTheme} className="hover:opacity-80">
           {theme === "dark" ? (
             <Sun className="w-6 h-6 text-yellow-300" />

@@ -9,13 +9,19 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import DeleteDialog from "@/components/DeleteProductDialog";
-import { ProductCart } from "@/types/product";
 
-
+type Product = {
+  _id: string;
+  title: string;
+  price: number;
+  stock: number;
+  image: string;
+  isDeleting?: boolean;
+};
 
 export default function AdminProductsPage() {
   const accessToken = useAuthStore((s) => s.accessToken);
-  const [products, setProducts] = useState<ProductCart[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const router = useRouter();
@@ -93,7 +99,7 @@ export default function AdminProductsPage() {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 ml-10 sm:ml-0">
       <div className="flex justify-end mb-4">
         <Link
           href="/admin/products/new"
@@ -136,7 +142,6 @@ export default function AdminProductsPage() {
 
       {!loading && !error && products.length > 0 && (
         <>
-          {console.log("🟢 Ürünler render ediliyor:", products)}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.map((product) => (
               <div

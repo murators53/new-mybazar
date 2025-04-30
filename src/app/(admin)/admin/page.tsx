@@ -57,7 +57,7 @@ export default function AdminDashboardPage() {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 ml-8 sm:ml-0">
       <div className="flex items-center justify-between mb-6">
         <div className="text-base text-gray-500 dark:text-gray-400">
           {formatLastUpdated()}

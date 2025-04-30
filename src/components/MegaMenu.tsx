@@ -39,6 +39,7 @@ const MegaMenu = () => {
                               .toLowerCase()
                               .replace(" ", "-")}`}
                             key={item}
+                            onClick={() => setActiveCategory(null)}
                           >
                             <span className="hover:underline cursor-pointer block mb-1 hover:font-semibold transition-all duration-300 ease-in-out">
                               {item}

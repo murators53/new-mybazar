@@ -77,9 +77,9 @@ export async function POST(req: Request) {
         maxAge: 60 * 60 * 24 * 7, // 7 gun saniye cinsinden
     })
 
-    let jwtApiRouteTestControl = 'Frontendden okuma testi icin yazildi API ROUTE auth loginden'
+    let isAdmin = user.isAdmin
     // 🔐 accessToken'ide frontend’e JSON olarak dönülür
-    return NextResponse.json({ accessToken, jwtApiRouteTestControl, email, refreshToken })
+    return NextResponse.json({ accessToken, isAdmin, email, refreshToken })
     // 🔐 Neden sadece accessToken dönüyoruz?
     // Çünkü refreshToken zaten cookie’de
     // Frontend sadece accessToken ile API istekleri yapacak

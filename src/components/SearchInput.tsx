@@ -2,23 +2,38 @@
 
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const SearchInput = () => {
-  //input’a yazılan arama kelimesi.
   const [term, setTerm] = useState("");
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false); // 👈 mobil input açma kontrolü
-
+  const [isOpen, setIsOpen] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    //trim() yanlislikla yapilan bosluklari siler
-    // " merhaba dunya " => "merhaba dunya"
-    if (!term.trim()) return; // ❌ input boşsa yönlendirme yapma
+    if (!term.trim()) return; 
     router.push(`/search?q=${term}`);
-    // ✅ URL’ye arama kelimesini ekleyip yönlendir
-    setIsOpen(false); // arama sonrası mobil inputu kapat
+
+    setIsOpen(false);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (formRef.current && !formRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
 
   return (
     <>
@@ -39,7 +54,7 @@ const SearchInput = () => {
         </button>
       </form>
 
-      {/* Mobil versiyon */}
+      {/* Mobil */}
       <div className="relative block md:hidden">
         <button
           className="p-2 rounded-full bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-600"
@@ -50,6 +65,7 @@ const SearchInput = () => {
 
         {isOpen && (
           <form
+            ref={formRef}
             onSubmit={handleSearch}
             className="absolute top-12 left-1/2 -translate-x-1/2 w-48 max-w-sm bg-white dark:bg-zinc-900 p-3 rounded-xl shadow-lg z-50 border dark:border-zinc-700 transition-all duration-300"
           >
